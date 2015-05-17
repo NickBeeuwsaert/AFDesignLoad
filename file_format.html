@@ -1,0 +1,758 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>.afdesign file format &mdash; AFDesignLoad 0.5 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="AFDesignLoad 0.5 documentation" href="index.html" />
+    <link rel="prev" title="Welcome to AFDesignLoad’s documentation!" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to AFDesignLoad’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">AFDesignLoad 0.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="afdesign-file-format">
+<h1>.afdesign file format<a class="headerlink" href="#afdesign-file-format" title="Permalink to this headline">¶</a></h1>
+<p>Values are stored in little-endian format</p>
+<p>I haven&#8217;t seen anything that actually looks like a flags field, usually
+there are a few boolean feilds so idk what some of these fields are for</p>
+<div class="section" id="header">
+<h2>Header<a class="headerlink" href="#header" title="Permalink to this headline">¶</a></h2>
+<p>Size: 68 bytes? Variable length?</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="14%" />
+<col width="20%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">Count</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>signature</td>
+<td rowspan="2">1</td>
+<td rowspan="2">uint32_t</td>
+<td>Signature?</td>
+</tr>
+<tr class="row-odd"><td>version</td>
+<td>Poseinfo</td>
+</tr>
+<tr class="row-even"><td>unused</td>
+<td rowspan="2">4</td>
+<td rowspan="2">char</td>
+<td>Prsn? (Personas?)</td>
+</tr>
+<tr class="row-odd"><td>info</td>
+<td>#Inf - File offsets?</td>
+</tr>
+<tr class="row-even"><td>FAT_offset</td>
+<td rowspan="8">1</td>
+<td rowspan="4">uint64_t</td>
+<td>See Notes on offset</td>
+</tr>
+<tr class="row-odd"><td>FAT_length</td>
+<td>See Notes on offset</td>
+</tr>
+<tr class="row-even"><td>zlib_length</td>
+<td>See Notes on offset</td>
+</tr>
+<tr class="row-odd"><td>unused</td>
+<td>See Notes on offset</td>
+</tr>
+<tr class="row-even"><td>creation</td>
+<td rowspan="2">uint32_t</td>
+<td>Date</td>
+</tr>
+<tr class="row-odd"><td>unused</td>
+<td>for some reason zero</td>
+</tr>
+<tr class="row-even"><td>fat_entries</td>
+<td rowspan="2">uint64_t</td>
+<td>Fat or info sections</td>
+</tr>
+<tr class="row-odd"><td>fil_entries</td>
+<td>Number of #fil secions?</td>
+</tr>
+</tbody>
+</table>
+<p>* <em>This is a guess</em></p>
+<div class="section" id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="offsets">
+<h4>offsets<a class="headerlink" href="#offsets" title="Permalink to this headline">¶</a></h4>
+<p>It looks like the first number encountered in the offsets is the
+location of the #FAT section</p>
+<p>The second section I still can&#8217;t figure out what it does, but it looks
+like the offset to the thumbnail (changing the location of the thumbnail
+and setting this to the new location doesn&#8217;t break the preview),</p>
+<p>The third header looks like the length of the compressed data starting
+at #Fil, But when there are more than one #FIL section idk what this
+means</p>
+<p>it looks the the <code class="docutils literal"><span class="pre">#Fil</span></code> and <code class="docutils literal"><span class="pre">#FAT</span></code> sections are ended with
+<code class="docutils literal"><span class="pre">0xFFFFFFFF</span></code></p>
+<p>Idk what the data before the #FIL is, I thought it was compresion level
+but if I have embedded images its like 57</p>
+</div>
+</div>
+</div>
+<div class="section" id="fat-section">
+<h2>#FAT section<a class="headerlink" href="#fat-section" title="Permalink to this headline">¶</a></h2>
+<p>Ok so, the data ends in the file name or something? a short will
+indicate the length of the filename?</p>
+<p>It looks like this section will define the offset of the #Fil sections
+and their length</p>
+<p>Looks like a entry starts with one byte, a 64 bit nubmer and a timestap</p>
+<p>It looks like each section starts with 1 byte for flags, then a 8 byte
+timestamp</p>
+<p>↓ This might be the FAT header? ↓</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="13%" />
+<col width="19%" />
+<col width="47%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">Type</th>
+<th class="head">description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>flags</td>
+<td rowspan="3">1</td>
+<td>uint64_t</td>
+<td>Flags?</td>
+</tr>
+<tr class="row-odd"><td>date</td>
+<td rowspan="2">uint32_t</td>
+<td>UNIX timestamp</td>
+</tr>
+<tr class="row-even"><td>flags</td>
+<td>more flags</td>
+</tr>
+<tr class="row-odd"><td>offsets</td>
+<td>4</td>
+<td>uint64_t</td>
+<td>offsets</td>
+</tr>
+<tr class="row-even"><td>fat_length</td>
+<td>1</td>
+<td>uint16_t</td>
+<td>The length of the fat section</td>
+</tr>
+<tr class="row-odd"><td>idk</td>
+<td>3</td>
+<td rowspan="2">char</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>idk</td>
+<td>2</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>^ I am pretty sure this is misaligned, there are more pad/flag bytes
+than I want, so I&#8217;m probably missing something. Also doc.dat occurs at
+the end of the file so this might be half a entry?</p>
+<p>Also, the last offset could very well be the number of entries</p>
+<p>Sometimes the timestamp seems to be wildly off, but was the file
+creation date for the doc.dat</p>
+<p>it looks like only one file will have a reliable name (&#8220;doc.dat&#8221;), and
+other files will be in a directory structure (d/a, d/c, b/a...)</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="15%" />
+<col width="16%" />
+<col width="49%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>idk</td>
+<td rowspan="8">1</td>
+<td>uint32_t</td>
+<td>idk. It&#8217;s always zero?</td>
+</tr>
+<tr class="row-odd"><td>idk_Again</td>
+<td>bool</td>
+<td>looks like a bitfield or a number...</td>
+</tr>
+<tr class="row-even"><td>data_offset</td>
+<td rowspan="3">uint64_t</td>
+<td>The offset of the data</td>
+</tr>
+<tr class="row-odd"><td>real_len</td>
+<td>uncompressed length</td>
+</tr>
+<tr class="row-even"><td>data_len</td>
+<td>The lengh of the chunk</td>
+</tr>
+<tr class="row-odd"><td>date</td>
+<td>uint32_t</td>
+<td>the date</td>
+</tr>
+<tr class="row-even"><td>compressed</td>
+<td>bool</td>
+<td>if the chunk is compressed</td>
+</tr>
+<tr class="row-odd"><td>fname_len</td>
+<td>uint16_t</td>
+<td>The filename length</td>
+</tr>
+<tr class="row-even"><td>filename</td>
+<td><em>fname_len</em></td>
+<td>char</td>
+<td>The filename</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="doc-dat-and-associated-crap">
+<h2>doc.dat and associated crap<a class="headerlink" href="#doc-dat-and-associated-crap" title="Permalink to this headline">¶</a></h2>
+<p>It looks like the tags were converted to 32-bit integers to be stored
+(as they have some meaning when reversed) Also: Each tag looks to be
+preceded by a number, idk what that is for yet I&#8217;m not counting it until
+I know what its for....</p>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;stdint.h&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+  <span class="k">union</span> <span class="p">{</span>
+    <span class="kt">uint32_t</span> <span class="n">tag</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+  <span class="p">};</span>
+  <span class="n">strncpy</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s">&quot;Prsn&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;0x%X</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="p">);</span>
+  <span class="c1">// On a little endian system, this should output</span>
+  <span class="c1">// 0x6E737250</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>I suspect there is some inspiration taken from the PNG file format with data in the capitalization of the chunk name</p>
+<div class="section" id="brps-sprb-document-properties">
+<h3>BrpS (SprB) (Document properties?)<a class="headerlink" href="#brps-sprb-document-properties" title="Permalink to this headline">¶</a></h3>
+<p>Total size: 36 bytes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="13%" />
+<col width="20%" />
+<col width="55%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>BrpS</td>
+<td>1</td>
+<td>uint32_t</td>
+<td>Dimension info</td>
+</tr>
+<tr class="row-odd"><td>?</td>
+<td>2</td>
+<td rowspan="3">double</td>
+<td>Idk? looks to be zero usually
+Maybe some offset info
+like x and y offset
+maybe w×h+x+y</td>
+</tr>
+<tr class="row-even"><td>width</td>
+<td rowspan="2">1</td>
+<td>Width</td>
+</tr>
+<tr class="row-odd"><td>height</td>
+<td>Height</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="capo-opac">
+<h3>capO (Opac)<a class="headerlink" href="#capo-opac" title="Permalink to this headline">¶</a></h3>
+<p>Total size: 8 bytes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="14%" />
+<col width="21%" />
+<col width="48%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">Descrpition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Opac</td>
+<td rowspan="2">1</td>
+<td>uint32_t</td>
+<td>Tag</td>
+</tr>
+<tr class="row-odd"><td>opacity</td>
+<td>float</td>
+<td>The opacity of the element</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="isiv-visi">
+<h3>isiV (Visi)<a class="headerlink" href="#isiv-visi" title="Permalink to this headline">¶</a></h3>
+<p>Total Size: 5 Bytes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="15%" />
+<col width="21%" />
+<col width="47%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">Descrpition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Visi</td>
+<td rowspan="2">1</td>
+<td>uint32_t</td>
+<td>The tag</td>
+</tr>
+<tr class="row-odd"><td>visible</td>
+<td>bool</td>
+<td>visibility of the element</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="csed-desc">
+<h3>cseD (Desc)<a class="headerlink" href="#csed-desc" title="Permalink to this headline">¶</a></h3>
+<p>Total Size: variable (smallest is 6 bytes)</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="17%" />
+<col width="24%" />
+<col width="44%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">Descrpition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Desc</td>
+<td rowspan="2">1</td>
+<td>uint32_t</td>
+<td>The tag</td>
+</tr>
+<tr class="row-odd"><td>size</td>
+<td>uint16_t</td>
+<td>Length of the name</td>
+</tr>
+<tr class="row-even"><td>name</td>
+<td><em>size</em></td>
+<td>char</td>
+<td>The name of the Desc</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ngrm-mrgn">
+<h3>ngrM (Mrgn)<a class="headerlink" href="#ngrm-mrgn" title="Permalink to this headline">¶</a></h3>
+<p>This field is speculation, I haven&#8217;t gotten time to look at it yet But,
+based on the size of the data I am assuming. the order may be incorrect
+(assuming it follows the order like CSS...) Total size: 36bytes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="20%" />
+<col width="22%" />
+<col width="37%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">Descrpition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Mrgn</td>
+<td rowspan="5">1</td>
+<td>char</td>
+<td>The Tag</td>
+</tr>
+<tr class="row-odd"><td>top</td>
+<td rowspan="4">double</td>
+<td>Top margin</td>
+</tr>
+<tr class="row-even"><td>left</td>
+<td>Left margin</td>
+</tr>
+<tr class="row-odd"><td>bottom</td>
+<td>Bottom margin</td>
+</tr>
+<tr class="row-even"><td>right</td>
+<td>Right margin</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="atad-data">
+<h3>ataD (Data)<a class="headerlink" href="#atad-data" title="Permalink to this headline">¶</a></h3>
+<p>Total Size: variable (smallest is 6 bytes)</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="17%" />
+<col width="25%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">Descrpition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Data</td>
+<td rowspan="2">1</td>
+<td>uint32_t</td>
+<td>The tag</td>
+</tr>
+<tr class="row-odd"><td>size</td>
+<td>uint16_t</td>
+<td>Length of the data</td>
+</tr>
+<tr class="row-even"><td>data</td>
+<td><em>size</em></td>
+<td>byte</td>
+<td>The data</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="toor-root">
+<h3>tooR (Root)<a class="headerlink" href="#toor-root" title="Permalink to this headline">¶</a></h3>
+<p>Speculation, again. Presumably the offset of the root node Total Size: 8
+bytes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="16%" />
+<col width="24%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">Descrpition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Root</td>
+<td rowspan="2">1</td>
+<td rowspan="2">uint32_t</td>
+<td>The tag</td>
+</tr>
+<tr class="row-odd"><td>offset</td>
+<td>Offset to Root node</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ngol-logarithm-in-base-n">
+<h3>NgoL (Logarithm in base N?)<a class="headerlink" href="#ngol-logarithm-in-base-n" title="Permalink to this headline">¶</a></h3>
+<p>Ok, to be honest I have no clue what this means. I don&#8217;t know how long it is,
+as I can&#8217;t figure out where the length is specified</p>
+</div>
+<div class="section" id="grou-groups">
+<h3>grOU (Groups)<a class="headerlink" href="#grou-groups" title="Permalink to this headline">¶</a></h3>
+<p>Groups?</p>
+</div>
+<div class="section" id="wpmb-bitmap-width">
+<h3>WpmB (Bitmap width)<a class="headerlink" href="#wpmb-bitmap-width" title="Permalink to this headline">¶</a></h3>
+<p>Width of a bitmap</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="16%" />
+<col width="24%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">Descrpition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>tag</td>
+<td>1</td>
+<td>uint32_t</td>
+<td>WpmB</td>
+</tr>
+<tr class="row-odd"><td>width</td>
+<td>1</td>
+<td>uint32_t</td>
+<td>Width</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="hpmb-bitmap-height">
+<h3>HpmB (Bitmap Height)<a class="headerlink" href="#hpmb-bitmap-height" title="Permalink to this headline">¶</a></h3>
+<p>Height of a bitmap</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="16%" />
+<col width="24%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">Descrpition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>tag</td>
+<td>1</td>
+<td>uint32_t</td>
+<td>HpmB</td>
+</tr>
+<tr class="row-odd"><td>height</td>
+<td>1</td>
+<td>uint32_t</td>
+<td>Height</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="bitm-bitmap">
+<h3>Bitm (Bitmap)<a class="headerlink" href="#bitm-bitmap" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="16%" />
+<col width="24%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">Descrpition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>tag</td>
+<td rowspan="3">1</td>
+<td>uint32_t</td>
+<td>Bitm</td>
+</tr>
+<tr class="row-odd"><td>flag</td>
+<td>bool</td>
+<td>boolean</td>
+</tr>
+<tr class="row-even"><td>size?</td>
+<td>uint32_t</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="tmrf-format">
+<h3>tmrF (Format)<a class="headerlink" href="#tmrf-format" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="16%" />
+<col width="24%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">Descrpition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>tag</td>
+<td>1</td>
+<td>uint32_t</td>
+<td>Frmt</td>
+</tr>
+<tr class="row-odd"><td>flag</td>
+<td>1</td>
+<td>unit32_t</td>
+<td>Format?</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">.afdesign file format</a><ul>
+<li><a class="reference internal" href="#header">Header</a><ul>
+<li><a class="reference internal" href="#notes">Notes</a><ul>
+<li><a class="reference internal" href="#offsets">offsets</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fat-section">#FAT section</a></li>
+<li><a class="reference internal" href="#doc-dat-and-associated-crap">doc.dat and associated crap</a><ul>
+<li><a class="reference internal" href="#brps-sprb-document-properties">BrpS (SprB) (Document properties?)</a></li>
+<li><a class="reference internal" href="#capo-opac">capO (Opac)</a></li>
+<li><a class="reference internal" href="#isiv-visi">isiV (Visi)</a></li>
+<li><a class="reference internal" href="#csed-desc">cseD (Desc)</a></li>
+<li><a class="reference internal" href="#ngrm-mrgn">ngrM (Mrgn)</a></li>
+<li><a class="reference internal" href="#atad-data">ataD (Data)</a></li>
+<li><a class="reference internal" href="#toor-root">tooR (Root)</a></li>
+<li><a class="reference internal" href="#ngol-logarithm-in-base-n">NgoL (Logarithm in base N?)</a></li>
+<li><a class="reference internal" href="#grou-groups">grOU (Groups)</a></li>
+<li><a class="reference internal" href="#wpmb-bitmap-width">WpmB (Bitmap width)</a></li>
+<li><a class="reference internal" href="#hpmb-bitmap-height">HpmB (Bitmap Height)</a></li>
+<li><a class="reference internal" href="#bitm-bitmap">Bitm (Bitmap)</a></li>
+<li><a class="reference internal" href="#tmrf-format">tmrF (Format)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to AFDesignLoad&#8217;s documentation!</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/file_format.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Nick Beeuwsaert.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.4</a>
+      
+      |
+      <a href="_sources/file_format.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+
+    
+
+    
+  </body>
+</html>
