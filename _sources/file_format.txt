@@ -41,7 +41,6 @@ Size: 68 bytes? Variable length?
 | fil\_entries   |         |             | Number of #fil secions?   |
 +----------------+---------+-------------+---------------------------+
 
-\* *This is a guess*
 
 Notes
 -----
@@ -52,19 +51,10 @@ offsets
 It looks like the first number encountered in the offsets is the
 location of the #FAT section
 
-The second section I still can't figure out what it does, but it looks
-like the offset to the thumbnail (changing the location of the thumbnail
-and setting this to the new location doesn't break the preview),
-
-The third header looks like the length of the compressed data starting
-at #Fil, But when there are more than one #FIL section idk what this
-means
+The second section looks to be the end of the #FAT section
 
 it looks the the ``#Fil`` and ``#FAT`` sections are ended with
 ``0xFFFFFFFF``
-
-Idk what the data before the #FIL is, I thought it was compresion level
-but if I have embedded images its like 57
 
 #FAT section
 ============
@@ -134,13 +124,13 @@ other files will be in a directory structure (d/a, d/c, b/a...)
 | filename       |*fname\_len*| char        | The filename                           |
 +----------------+------------+-------------+----------------------------------------+
 
-doc.dat and associated crap
-===========================
+doc.dat
+=======
 
-It looks like the tags were converted to 32-bit integers to be stored
-(as they have some meaning when reversed) Also: Each tag looks to be
-preceded by a number, idk what that is for yet I'm not counting it until
-I know what its for....
+It looks like the tags are strings, but where stored in 32-bit integers
+when saved. The names of each chunk are reversed and are each characters long.
+
+They were probably stored something like this:
 
 .. code-block:: c
   :linenos:
@@ -160,10 +150,12 @@ I know what its for....
     return 0;
   }
 
-I suspect there is some inspiration taken from the PNG file format with data in the capitalization of the chunk name
+It looks like the capitalization of the chunks do not matter to indicate flags,
+like the PNG format does.. So that's cool.
 
-BrpS (SprB) (Document properties?)
-----------------------------------
+
+SprB (Document properties?)
+---------------------------
 
 
 Total size: 36 bytes
@@ -183,8 +175,8 @@ Total size: 36 bytes
 | height|       |           | Height                        |
 +-------+-------+-----------+-------------------------------+
 
-capO (Opac)
------------
+Opac
+----
 
 Total size: 8 bytes
 
@@ -196,8 +188,8 @@ Total size: 8 bytes
 | opacity   |         | float       | The opacity of the element   |
 +-----------+---------+-------------+------------------------------+
 
-isiV (Visi)
------------
+Visi
+----
 
 Total Size: 5 Bytes
 
@@ -209,8 +201,8 @@ Total Size: 5 Bytes
 | visible   |         | bool        | visibility of the element   |
 +-----------+---------+-------------+-----------------------------+
 
-cseD (Desc)
------------
+Desc
+----
 
 Total Size: variable (smallest is 6 bytes)
 
@@ -224,29 +216,30 @@ Total Size: variable (smallest is 6 bytes)
 | name   | *size*  | char        | The name of the Desc   |
 +--------+---------+-------------+------------------------+
 
-ngrM (Mrgn)
------------
+Mrgn
+----
 
 This field is speculation, I haven't gotten time to look at it yet But,
-based on the size of the data I am assuming. the order may be incorrect
-(assuming it follows the order like CSS...) Total size: 36bytes
+based on the size of the data I am assuming.
+
+Total size: 36bytes
 
 +----------+---------+----------+-----------------+
 | name     | count   | type     | Descrpition     |
 +==========+=========+==========+=================+
 | Mrgn     |         | char     | The Tag         |
 +----------+         +----------+-----------------+
-| top      |         |          | Top margin      |
+| left     |         |          | left margin     |
 +----------+         +          +-----------------+
-| left     |    1    |          | Left margin     |
+| top      |    1    |          | top margin      |
 +----------+         +  double  +-----------------+
-| bottom   |         |          | Bottom margin   |
+| right    |         |          | right margin    |
 +----------+         +          +-----------------+
-| right    |         |          | Right margin    |
+| bottom   |         |          | bottom margin   |
 +----------+---------+----------+-----------------+
 
-ataD (Data)
------------
+Data
+----
 
 Total Size: variable (smallest is 6 bytes)
 
@@ -260,8 +253,8 @@ Total Size: variable (smallest is 6 bytes)
 | data   | *size*  | byte        | The data             |
 +--------+---------+-------------+----------------------+
 
-tooR (Root)
------------
+Root
+----
 
 Speculation, again. Presumably the offset of the root node Total Size: 8
 bytes
@@ -279,11 +272,11 @@ NgoL (Logarithm in base N?)
 Ok, to be honest I have no clue what this means. I don't know how long it is, 
 as I can't figure out where the length is specified
 
-grOU (Groups)
+UOrg (???)
 -------------
-Groups?
+User organization? maybe the layers?
 
-WpmB (Bitmap width)
+BmpW (Bitmap width)
 -------------------
 Width of a bitmap
 
@@ -296,7 +289,7 @@ Width of a bitmap
 +----------+---------+-------------+-----------------------+
 
 
-HpmB (Bitmap Height)
+BmpH (Bitmap Height)
 --------------------
 Height of a bitmap
 
@@ -322,7 +315,7 @@ Bitm (Bitmap)
 +----------+---------+-------------+-----------------------+
 
 
-tmrF (Format)
+Frmt (Format)
 -------------
 
 +----------+---------+-------------+-----------------------+
@@ -332,3 +325,85 @@ tmrF (Format)
 +----------+---------+-------------+-----------------------+
 | flag     |    1    | unit32_t    | Format?               |
 +----------+---------+-------------+-----------------------+
+
+Shap (Shape)
+------------
+Shape info? I tried creating a test document with several shapes. But there were only one of these....
+
+irtS (String)
+-------------
+
++----------+---------+-------------+-----------------------+
+| name     |  count  | type        | Descrpition           |
++==========+=========+=============+=======================+
+| tag      |    1    | uint32_t    | Stri                  |
++----------+---------+-------------+-----------------------+
+
+FOpc (F? Opacity)
+-----------------
+
++----------+---------+-------------+-----------------------+
+| name     |  count  | type        | Descrpition           |
++==========+=========+=============+=======================+
+| tag      |    1    |  uint32_t   | FOpc                  |
++----------+---------+-------------+-----------------------+
+| opacity  |    1    |  float      |                       |
++----------+---------+-------------+-----------------------+
+
+Blnd (Blend)
+------------
+
+Layer mode? Blending mode? Blendy blend blend.
+
+
+XMPD (XMP Data)
+---------------
+
+The XMP Data
+
++----------+---------+-------------+-----------------------+
+| name     |  count  | type        | Descrpition           |
++==========+=========+=============+=======================+
+| tag      |    1    |  uint32_t   | XMPD                  |
++----------+---------+-------------+-----------------------+
+| length   |    1    |  uint32_t   | Length of the XMP     |
+|          |         |             | data                  |
++----------+---------+-------------+-----------------------+
+| data     |*length* | char        | XML String            |
++----------+---------+-------------+-----------------------+
+
+bmyS (Symbol)
+-------------
+
+
+Post (Postscript)
+-----------------
+Post script name of a font
+
++----------+---------+-------------+-----------------------+
+| name     |  count  | type        | Descrpition           |
++==========+=========+=============+=======================+
+| tag      |    1    |  uint32_t   | Post                  |
++----------+---------+-------------+-----------------------+
+| length   |    1    |  uint32_t   | Length of the font    |
+|          |         |             | name                  |
++----------+---------+-------------+-----------------------+
+| name     |*length* | char        |                       |
++----------+---------+-------------+-----------------------+
+
+Famy (Font Family)
+------------------
+Font family of a font
+
++----------+---------+-------------+-----------------------+
+| name     |  count  | type        | Descrpition           |
++==========+=========+=============+=======================+
+| tag      |    1    |  uint32_t   | Famy                  |
++----------+---------+-------------+-----------------------+
+| length   |    1    |  uint32_t   | Length of the font    |
+|          |         |             | family name           |
++----------+---------+-------------+-----------------------+
+| Family   |*length* |  char       |                       |
++----------+---------+-------------+-----------------------+
+
+

@@ -120,23 +120,15 @@ there are a few boolean feilds so idk what some of these fields are for</p>
 </tr>
 </tbody>
 </table>
-<p>* <em>This is a guess</em></p>
 <div class="section" id="notes">
 <h3>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="offsets">
 <h4>offsets<a class="headerlink" href="#offsets" title="Permalink to this headline">¶</a></h4>
 <p>It looks like the first number encountered in the offsets is the
 location of the #FAT section</p>
-<p>The second section I still can&#8217;t figure out what it does, but it looks
-like the offset to the thumbnail (changing the location of the thumbnail
-and setting this to the new location doesn&#8217;t break the preview),</p>
-<p>The third header looks like the length of the compressed data starting
-at #Fil, But when there are more than one #FIL section idk what this
-means</p>
+<p>The second section looks to be the end of the #FAT section</p>
 <p>it looks the the <code class="docutils literal"><span class="pre">#Fil</span></code> and <code class="docutils literal"><span class="pre">#FAT</span></code> sections are ended with
 <code class="docutils literal"><span class="pre">0xFFFFFFFF</span></code></p>
-<p>Idk what the data before the #FIL is, I thought it was compresion level
-but if I have embedded images its like 57</p>
 </div>
 </div>
 </div>
@@ -260,12 +252,11 @@ other files will be in a directory structure (d/a, d/c, b/a...)</p>
 </tbody>
 </table>
 </div>
-<div class="section" id="doc-dat-and-associated-crap">
-<h2>doc.dat and associated crap<a class="headerlink" href="#doc-dat-and-associated-crap" title="Permalink to this headline">¶</a></h2>
-<p>It looks like the tags were converted to 32-bit integers to be stored
-(as they have some meaning when reversed) Also: Each tag looks to be
-preceded by a number, idk what that is for yet I&#8217;m not counting it until
-I know what its for....</p>
+<div class="section" id="doc-dat">
+<h2>doc.dat<a class="headerlink" href="#doc-dat" title="Permalink to this headline">¶</a></h2>
+<p>It looks like the tags are strings, but where stored in 32-bit integers
+when saved. The names of each chunk are reversed and are each characters long.</p>
+<p>They were probably stored something like this:</p>
 <div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -295,9 +286,10 @@ I know what its for....</p>
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>I suspect there is some inspiration taken from the PNG file format with data in the capitalization of the chunk name</p>
-<div class="section" id="brps-sprb-document-properties">
-<h3>BrpS (SprB) (Document properties?)<a class="headerlink" href="#brps-sprb-document-properties" title="Permalink to this headline">¶</a></h3>
+<p>It looks like the capitalization of the chunks do not matter to indicate flags,
+like the PNG format does.. So that&#8217;s cool.</p>
+<div class="section" id="sprb-document-properties">
+<h3>SprB (Document properties?)<a class="headerlink" href="#sprb-document-properties" title="Permalink to this headline">¶</a></h3>
 <p>Total size: 36 bytes</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -337,8 +329,8 @@ maybe w×h+x+y</td>
 </tbody>
 </table>
 </div>
-<div class="section" id="capo-opac">
-<h3>capO (Opac)<a class="headerlink" href="#capo-opac" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="opac">
+<h3>Opac<a class="headerlink" href="#opac" title="Permalink to this headline">¶</a></h3>
 <p>Total size: 8 bytes</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -367,8 +359,8 @@ maybe w×h+x+y</td>
 </tbody>
 </table>
 </div>
-<div class="section" id="isiv-visi">
-<h3>isiV (Visi)<a class="headerlink" href="#isiv-visi" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="visi">
+<h3>Visi<a class="headerlink" href="#visi" title="Permalink to this headline">¶</a></h3>
 <p>Total Size: 5 Bytes</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -397,8 +389,8 @@ maybe w×h+x+y</td>
 </tbody>
 </table>
 </div>
-<div class="section" id="csed-desc">
-<h3>cseD (Desc)<a class="headerlink" href="#csed-desc" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="desc">
+<h3>Desc<a class="headerlink" href="#desc" title="Permalink to this headline">¶</a></h3>
 <p>Total Size: variable (smallest is 6 bytes)</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -432,11 +424,11 @@ maybe w×h+x+y</td>
 </tbody>
 </table>
 </div>
-<div class="section" id="ngrm-mrgn">
-<h3>ngrM (Mrgn)<a class="headerlink" href="#ngrm-mrgn" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="mrgn">
+<h3>Mrgn<a class="headerlink" href="#mrgn" title="Permalink to this headline">¶</a></h3>
 <p>This field is speculation, I haven&#8217;t gotten time to look at it yet But,
-based on the size of the data I am assuming. the order may be incorrect
-(assuming it follows the order like CSS...) Total size: 36bytes</p>
+based on the size of the data I am assuming.</p>
+<p>Total size: 36bytes</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="22%" />
@@ -457,24 +449,24 @@ based on the size of the data I am assuming. the order may be incorrect
 <td>char</td>
 <td>The Tag</td>
 </tr>
-<tr class="row-odd"><td>top</td>
+<tr class="row-odd"><td>left</td>
 <td rowspan="4">double</td>
-<td>Top margin</td>
+<td>left margin</td>
 </tr>
-<tr class="row-even"><td>left</td>
-<td>Left margin</td>
+<tr class="row-even"><td>top</td>
+<td>top margin</td>
 </tr>
-<tr class="row-odd"><td>bottom</td>
-<td>Bottom margin</td>
+<tr class="row-odd"><td>right</td>
+<td>right margin</td>
 </tr>
-<tr class="row-even"><td>right</td>
-<td>Right margin</td>
+<tr class="row-even"><td>bottom</td>
+<td>bottom margin</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="section" id="atad-data">
-<h3>ataD (Data)<a class="headerlink" href="#atad-data" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="data">
+<h3>Data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h3>
 <p>Total Size: variable (smallest is 6 bytes)</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -508,8 +500,8 @@ based on the size of the data I am assuming. the order may be incorrect
 </tbody>
 </table>
 </div>
-<div class="section" id="toor-root">
-<h3>tooR (Root)<a class="headerlink" href="#toor-root" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="root">
+<h3>Root<a class="headerlink" href="#root" title="Permalink to this headline">¶</a></h3>
 <p>Speculation, again. Presumably the offset of the root node Total Size: 8
 bytes</p>
 <table border="1" class="docutils">
@@ -543,12 +535,12 @@ bytes</p>
 <p>Ok, to be honest I have no clue what this means. I don&#8217;t know how long it is,
 as I can&#8217;t figure out where the length is specified</p>
 </div>
-<div class="section" id="grou-groups">
-<h3>grOU (Groups)<a class="headerlink" href="#grou-groups" title="Permalink to this headline">¶</a></h3>
-<p>Groups?</p>
+<div class="section" id="uorg">
+<h3>UOrg (???)<a class="headerlink" href="#uorg" title="Permalink to this headline">¶</a></h3>
+<p>User organization? maybe the layers?</p>
 </div>
-<div class="section" id="wpmb-bitmap-width">
-<h3>WpmB (Bitmap width)<a class="headerlink" href="#wpmb-bitmap-width" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="bmpw-bitmap-width">
+<h3>BmpW (Bitmap width)<a class="headerlink" href="#bmpw-bitmap-width" title="Permalink to this headline">¶</a></h3>
 <p>Width of a bitmap</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -578,8 +570,8 @@ as I can&#8217;t figure out where the length is specified</p>
 </tbody>
 </table>
 </div>
-<div class="section" id="hpmb-bitmap-height">
-<h3>HpmB (Bitmap Height)<a class="headerlink" href="#hpmb-bitmap-height" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="bmph-bitmap-height">
+<h3>BmpH (Bitmap Height)<a class="headerlink" href="#bmph-bitmap-height" title="Permalink to this headline">¶</a></h3>
 <p>Height of a bitmap</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -642,8 +634,8 @@ as I can&#8217;t figure out where the length is specified</p>
 </tbody>
 </table>
 </div>
-<div class="section" id="tmrf-format">
-<h3>tmrF (Format)<a class="headerlink" href="#tmrf-format" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="frmt-format">
+<h3>Frmt (Format)<a class="headerlink" href="#frmt-format" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="docutils">
 <colgroup>
 <col width="18%" />
@@ -672,6 +664,183 @@ as I can&#8217;t figure out where the length is specified</p>
 </tbody>
 </table>
 </div>
+<div class="section" id="shap-shape">
+<h3>Shap (Shape)<a class="headerlink" href="#shap-shape" title="Permalink to this headline">¶</a></h3>
+<p>Shape info? I tried creating a test document with several shapes. But there were only one of these....</p>
+</div>
+<div class="section" id="irts-string">
+<h3>irtS (String)<a class="headerlink" href="#irts-string" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="16%" />
+<col width="24%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">Descrpition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>tag</td>
+<td>1</td>
+<td>uint32_t</td>
+<td>Stri</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="fopc-f-opacity">
+<h3>FOpc (F? Opacity)<a class="headerlink" href="#fopc-f-opacity" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="16%" />
+<col width="24%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">Descrpition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>tag</td>
+<td>1</td>
+<td>uint32_t</td>
+<td>FOpc</td>
+</tr>
+<tr class="row-odd"><td>opacity</td>
+<td>1</td>
+<td>float</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="blnd-blend">
+<h3>Blnd (Blend)<a class="headerlink" href="#blnd-blend" title="Permalink to this headline">¶</a></h3>
+<p>Layer mode? Blending mode? Blendy blend blend.</p>
+</div>
+<div class="section" id="xmpd-xmp-data">
+<h3>XMPD (XMP Data)<a class="headerlink" href="#xmpd-xmp-data" title="Permalink to this headline">¶</a></h3>
+<p>The XMP Data</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="16%" />
+<col width="24%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">Descrpition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>tag</td>
+<td>1</td>
+<td>uint32_t</td>
+<td>XMPD</td>
+</tr>
+<tr class="row-odd"><td>length</td>
+<td>1</td>
+<td>uint32_t</td>
+<td>Length of the XMP
+data</td>
+</tr>
+<tr class="row-even"><td>data</td>
+<td><em>length</em></td>
+<td>char</td>
+<td>XML String</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="bmys-symbol">
+<h3>bmyS (Symbol)<a class="headerlink" href="#bmys-symbol" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="post-postscript">
+<h3>Post (Postscript)<a class="headerlink" href="#post-postscript" title="Permalink to this headline">¶</a></h3>
+<p>Post script name of a font</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="16%" />
+<col width="24%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">Descrpition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>tag</td>
+<td>1</td>
+<td>uint32_t</td>
+<td>Post</td>
+</tr>
+<tr class="row-odd"><td>length</td>
+<td>1</td>
+<td>uint32_t</td>
+<td>Length of the font
+name</td>
+</tr>
+<tr class="row-even"><td>name</td>
+<td><em>length</em></td>
+<td>char</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="famy-font-family">
+<h3>Famy (Font Family)<a class="headerlink" href="#famy-font-family" title="Permalink to this headline">¶</a></h3>
+<p>Font family of a font</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="16%" />
+<col width="24%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">Descrpition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>tag</td>
+<td>1</td>
+<td>uint32_t</td>
+<td>Famy</td>
+</tr>
+<tr class="row-odd"><td>length</td>
+<td>1</td>
+<td>uint32_t</td>
+<td>Length of the font
+family name</td>
+</tr>
+<tr class="row-even"><td>Family</td>
+<td><em>length</em></td>
+<td>char</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 
@@ -692,20 +861,28 @@ as I can&#8217;t figure out where the length is specified</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#fat-section">#FAT section</a></li>
-<li><a class="reference internal" href="#doc-dat-and-associated-crap">doc.dat and associated crap</a><ul>
-<li><a class="reference internal" href="#brps-sprb-document-properties">BrpS (SprB) (Document properties?)</a></li>
-<li><a class="reference internal" href="#capo-opac">capO (Opac)</a></li>
-<li><a class="reference internal" href="#isiv-visi">isiV (Visi)</a></li>
-<li><a class="reference internal" href="#csed-desc">cseD (Desc)</a></li>
-<li><a class="reference internal" href="#ngrm-mrgn">ngrM (Mrgn)</a></li>
-<li><a class="reference internal" href="#atad-data">ataD (Data)</a></li>
-<li><a class="reference internal" href="#toor-root">tooR (Root)</a></li>
+<li><a class="reference internal" href="#doc-dat">doc.dat</a><ul>
+<li><a class="reference internal" href="#sprb-document-properties">SprB (Document properties?)</a></li>
+<li><a class="reference internal" href="#opac">Opac</a></li>
+<li><a class="reference internal" href="#visi">Visi</a></li>
+<li><a class="reference internal" href="#desc">Desc</a></li>
+<li><a class="reference internal" href="#mrgn">Mrgn</a></li>
+<li><a class="reference internal" href="#data">Data</a></li>
+<li><a class="reference internal" href="#root">Root</a></li>
 <li><a class="reference internal" href="#ngol-logarithm-in-base-n">NgoL (Logarithm in base N?)</a></li>
-<li><a class="reference internal" href="#grou-groups">grOU (Groups)</a></li>
-<li><a class="reference internal" href="#wpmb-bitmap-width">WpmB (Bitmap width)</a></li>
-<li><a class="reference internal" href="#hpmb-bitmap-height">HpmB (Bitmap Height)</a></li>
+<li><a class="reference internal" href="#uorg">UOrg (???)</a></li>
+<li><a class="reference internal" href="#bmpw-bitmap-width">BmpW (Bitmap width)</a></li>
+<li><a class="reference internal" href="#bmph-bitmap-height">BmpH (Bitmap Height)</a></li>
 <li><a class="reference internal" href="#bitm-bitmap">Bitm (Bitmap)</a></li>
-<li><a class="reference internal" href="#tmrf-format">tmrF (Format)</a></li>
+<li><a class="reference internal" href="#frmt-format">Frmt (Format)</a></li>
+<li><a class="reference internal" href="#shap-shape">Shap (Shape)</a></li>
+<li><a class="reference internal" href="#irts-string">irtS (String)</a></li>
+<li><a class="reference internal" href="#fopc-f-opacity">FOpc (F? Opacity)</a></li>
+<li><a class="reference internal" href="#blnd-blend">Blnd (Blend)</a></li>
+<li><a class="reference internal" href="#xmpd-xmp-data">XMPD (XMP Data)</a></li>
+<li><a class="reference internal" href="#bmys-symbol">bmyS (Symbol)</a></li>
+<li><a class="reference internal" href="#post-postscript">Post (Postscript)</a></li>
+<li><a class="reference internal" href="#famy-font-family">Famy (Font Family)</a></li>
 </ul>
 </li>
 </ul>
