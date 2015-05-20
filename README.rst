@@ -18,3 +18,8 @@ You can extract the test data using this shell one liner, or do them one at a ti
 .. code-block:: sh
 
     $ for f in testDesigns/*; do ./main.py "$f" data/$(basename "$f" .afdesign); done
+
+Documentation
+=============
+
+I have what I have documented current available at the `GitHub Pages <http://nickbeeuwsaert.github.io/AFDesignLoad>`_ site
