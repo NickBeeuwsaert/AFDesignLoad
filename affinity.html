@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>affinity — Load Affinity Designer Files &mdash; AFDesignLoad 0.5 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="AFDesignLoad 0.5 documentation" href="index.html" />
+    <link rel="next" title=".afdesign file format" href="file_format.html" />
+    <link rel="prev" title="Welcome to AFDesignLoad’s documentation!" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="file_format.html" title=".afdesign file format"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to AFDesignLoad’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">AFDesignLoad 0.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="affinity-load-affinity-designer-files">
+<h1><code class="xref py py-mod docutils literal"><span class="pre">affinity</span></code> &#8212; Load Affinity Designer Files<a class="headerlink" href="#affinity-load-affinity-designer-files" title="Permalink to this headline">¶</a></h1>
+<div class="admonition danger">
+<p class="first admonition-title">Danger</p>
+<p class="last">This module WILL change! Continue at your own risk!</p>
+</div>
+<dl class="class">
+<dt id="AffinityFile">
+<em class="property">class </em><code class="descname">AffinityFile</code><span class="sig-paren">(</span><em>file_path</em><span class="sig-paren">)</span><a class="headerlink" href="#AffinityFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads and parses an Affinity Designer File</p>
+<dl class="attribute">
+<dt id="AffinityFile.header">
+<code class="descname">header</code><a class="headerlink" href="#AffinityFile.header" title="Permalink to this definition">¶</a></dt>
+<dd><p>The file header info</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AffinityFile.layers">
+<code class="descname">layers</code><a class="headerlink" href="#AffinityFile.layers" title="Permalink to this definition">¶</a></dt>
+<dd><p>a list containing the layers in the document</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AffinityFile.documents">
+<code class="descname">documents</code><a class="headerlink" href="#AffinityFile.documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary containing all documents in the file</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="FATHeader">
+<em class="property">class </em><code class="descname">FATHeader</code><span class="sig-paren">(</span><em>flags</em>, <em>date</em>, <em>unused</em>, <em>offsets</em>, <em>length</em>, <em>unused_2</em><span class="sig-paren">)</span><a class="headerlink" href="#FATHeader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a FAT header from the root AFD document</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>flags</strong> (<em>int</em>) &#8211; the flags to the header has</li>
+<li><strong>date</strong> (<em>datetime.datetime</em>) &#8211; the date the file was created</li>
+<li><strong>unused</strong> &#8211; IDK yet</li>
+<li><strong>offsets</strong> (<em>tuple&lt;int&gt;</em>) &#8211; Some offsets?</li>
+<li><strong>length</strong> (<em>int</em>) &#8211; length of the FAT section</li>
+<li><strong>unused_2</strong> &#8211; Yet more unused data</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="staticmethod">
+<dt id="FATHeader.create_from_file">
+<em class="property">static </em><code class="descname">create_from_file</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="headerlink" href="#FATHeader.create_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>reads the data from a binary file-object and returns a new FATHeader</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="FATEntry">
+<em class="property">class </em><code class="descname">FATEntry</code><span class="sig-paren">(</span><em>idk</em>, <em>offset</em>, <em>real_len</em>, <em>c_len</em>, <em>date</em>, <em>compressed</em>, <em>fname_len</em>, <em>filename</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#FATEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores a FAT Entry</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>idk</strong> &#8211; I do not know what this is yet</li>
+<li><strong>offset</strong> (<em>int</em>) &#8211; Offset to the data</li>
+<li><strong>real_len</strong> (<em>int</em>) &#8211; Length of the uncompressed data</li>
+<li><strong>c_len</strong> (<em>int</em>) &#8211; Length of the compressed data</li>
+<li><strong>date</strong> (<em>datetime.datetime</em>) &#8211; The timestamp of the entry</li>
+<li><strong>compressed</strong> (<em>bool</em>) &#8211; Whether or not the data is compressed</li>
+<li><strong>fname_len</strong> (<em>int</em>) &#8211; The length of the filename</li>
+<li><strong>filename</strong> (<em>str</em>) &#8211; The filename</li>
+<li><strong>data</strong> (<em>bytes</em>) &#8211; the entries file contents</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="staticmethod">
+<dt id="FATEntry.create_from_file">
+<em class="property">static </em><code class="descname">create_from_file</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="headerlink" href="#FATEntry.create_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>parses a <code class="docutils literal"><span class="pre">FATEntry</span></code> from the file-object in <code class="docutils literal"><span class="pre">f</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f</strong> (<em>file</em>) &#8211; The file-object to use to crate the <code class="docutils literal"><span class="pre">FATEntry</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to AFDesignLoad&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="file_format.html"
+                        title="next chapter">.afdesign file format</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/affinity.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Nick Beeuwsaert.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.4</a>
+      
+      |
+      <a href="_sources/affinity.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+
+    
+
+    
+  </body>
+</html>

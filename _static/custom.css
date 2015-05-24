@@ -1,4 +1,6 @@
-table.docutils td, table.docutils th {
+table.docutils:not(.field-list) td, table.docutils th {
     vertical-align: middle;
     text-align: center;
 }
+
+ 

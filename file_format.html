@@ -668,8 +668,8 @@ as I can&#8217;t figure out where the length is specified</p>
 <h3>Shap (Shape)<a class="headerlink" href="#shap-shape" title="Permalink to this headline">¶</a></h3>
 <p>Shape info? I tried creating a test document with several shapes. But there were only one of these....</p>
 </div>
-<div class="section" id="irts-string">
-<h3>irtS (String)<a class="headerlink" href="#irts-string" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="stri-string">
+<h3>Stri (String)<a class="headerlink" href="#stri-string" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="docutils">
 <colgroup>
 <col width="18%" />
@@ -764,8 +764,8 @@ data</td>
 </tbody>
 </table>
 </div>
-<div class="section" id="bmys-symbol">
-<h3>bmyS (Symbol)<a class="headerlink" href="#bmys-symbol" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="symb-symbol">
+<h3>Symb (Symbol)<a class="headerlink" href="#symb-symbol" title="Permalink to this headline">¶</a></h3>
 </div>
 <div class="section" id="post-postscript">
 <h3>Post (Postscript)<a class="headerlink" href="#post-postscript" title="Permalink to this headline">¶</a></h3>
@@ -841,6 +841,40 @@ family name</td>
 </tbody>
 </table>
 </div>
+<div class="section" id="crvs-curves">
+<h3>Crvs (Curves)<a class="headerlink" href="#crvs-curves" title="Permalink to this headline">¶</a></h3>
+<p>Curves</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="16%" />
+<col width="24%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">name</th>
+<th class="head">count</th>
+<th class="head">type</th>
+<th class="head">Descrpition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>tag</td>
+<td>1</td>
+<td>uint32_t</td>
+<td>Crvs</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="rect-rect">
+<h3>Rect (Rect)<a class="headerlink" href="#rect-rect" title="Permalink to this headline">¶</a></h3>
+<p>Rectangle, 4 32-bit integers, order x, y, w, h</p>
+</div>
+<div class="section" id="chld-children">
+<h3>Chld (Children)<a class="headerlink" href="#chld-children" title="Permalink to this headline">¶</a></h3>
+<p>Looks like it indicates how many children a field has</p>
+</div>
 </div>
 </div>
 
@@ -876,13 +910,16 @@ family name</td>
 <li><a class="reference internal" href="#bitm-bitmap">Bitm (Bitmap)</a></li>
 <li><a class="reference internal" href="#frmt-format">Frmt (Format)</a></li>
 <li><a class="reference internal" href="#shap-shape">Shap (Shape)</a></li>
-<li><a class="reference internal" href="#irts-string">irtS (String)</a></li>
+<li><a class="reference internal" href="#stri-string">Stri (String)</a></li>
 <li><a class="reference internal" href="#fopc-f-opacity">FOpc (F? Opacity)</a></li>
 <li><a class="reference internal" href="#blnd-blend">Blnd (Blend)</a></li>
 <li><a class="reference internal" href="#xmpd-xmp-data">XMPD (XMP Data)</a></li>
-<li><a class="reference internal" href="#bmys-symbol">bmyS (Symbol)</a></li>
+<li><a class="reference internal" href="#symb-symbol">Symb (Symbol)</a></li>
 <li><a class="reference internal" href="#post-postscript">Post (Postscript)</a></li>
 <li><a class="reference internal" href="#famy-font-family">Famy (Font Family)</a></li>
+<li><a class="reference internal" href="#crvs-curves">Crvs (Curves)</a></li>
+<li><a class="reference internal" href="#rect-rect">Rect (Rect)</a></li>
+<li><a class="reference internal" href="#chld-children">Chld (Children)</a></li>
 </ul>
 </li>
 </ul>

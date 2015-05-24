@@ -330,7 +330,7 @@ Shap (Shape)
 ------------
 Shape info? I tried creating a test document with several shapes. But there were only one of these....
 
-irtS (String)
+Stri (String)
 -------------
 
 +----------+---------+-------------+-----------------------+
@@ -372,7 +372,7 @@ The XMP Data
 | data     |*length* | char        | XML String            |
 +----------+---------+-------------+-----------------------+
 
-bmyS (Symbol)
+Symb (Symbol)
 -------------
 
 
@@ -407,3 +407,21 @@ Font family of a font
 +----------+---------+-------------+-----------------------+
 
 
+Crvs (Curves)
+-------------
+Curves
+
++----------+---------+-------------+-----------------------+
+| name     |  count  | type        | Descrpition           |
++==========+=========+=============+=======================+
+| tag      |    1    |  uint32_t   | Crvs                  |
++----------+---------+-------------+-----------------------+
+
+Rect (Rect)
+-----------
+Rectangle, 4 32-bit integers, order x, y, w, h
+
+
+Chld (Children)
+---------------
+Looks like it indicates how many children a field has
