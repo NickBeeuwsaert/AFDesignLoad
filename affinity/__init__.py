@@ -4,7 +4,7 @@ import struct
 from datetime import datetime
 import zlib
 
-Header = namedtuple('Header', ('signature', 'version', 'prsn'))
+Header = namedtuple('Header', ('signature', 'version', 'offsets', 'creation_date'))
 unpack = lambda f, fmt: struct.unpack(fmt, f.read(struct.calcsize(fmt)))
 #FATHeader = namedtuple('FATHeader', 'unused timestamp flags offset_1 offset_2 offset_3 offseet_4 fat_length idk')
 
@@ -46,7 +46,7 @@ class FATEntry(object):
         pos = f.tell()
         f.seek(data_offset)
         fil_sig, = unpack(f, "<4s")
-        assert(fil_sig == b'#Fil')
+        assert fil_sig == b'#Fil'
         data = f.read(data_len)
 
         if compressed:
@@ -78,24 +78,36 @@ class FATHeader(object):
 
 
 class AffinityFile(object):
-    def __init__(self, f):
-        self.headers = Header(*unpack(f, "<III"))
-        inf, = unpack(f, "<4s")
-        print(inf)
-        assert(inf == b'#Inf')
+    def __init__(self, filename):
+        f = open(filename, 'rb')
+        #self.headers = Header(*unpack(f, "<III"))
+        signature, version, prsn = unpack(f, "<2I4s")
+        assert prsn == b'nsrP', "This doesn't look like an AffinityDesigner file!"
 
-        self.fat_offset, self.fat_end, self.fil_length, self.unused = unpack(f, "<4Q")
-        self.timestamp, = unpack(f, "<I")
-        self.timestamp = datetime.fromtimestamp(self.timestamp)
+        inf, = unpack(f, "<4s")
+        assert inf == b'#Inf', 'Expected #Inf section!'
+
+
+        offsets = unpack(f, "<4Q")
+        timestamp, = unpack(f, "<I")
+        timestamp = datetime.fromtimestamp(timestamp)
+
+        self.header = Header(signature, version, offsets, timestamp)
+
         self.uh = unpack(f, "<IQQ")
+        fat_offset, fat_end, _, _ = offsets
 
         # Seek to the FAT Section and start reading data
 
-        f.seek(self.fat_offset)
+        f.seek(fat_offset)
         fat_flag, = unpack(f, "<4s")
-        assert(fat_flag == b'#FAT')
+        assert fat_flag == b'#FAT'
         fh = FATHeader.create_from_file(f)
 
-        self.fat_entries = []
+        self.documents = {}
         for i in range(fh.offsets[-1]):
-            self.fat_entries += [FATEntry.create_from_file(f)]
+            entry = FATEntry.create_from_file(f)
+            self.documents[entry.filename] = entry
+
+        # For when we get to reading the layers
+        self.layers = {}
